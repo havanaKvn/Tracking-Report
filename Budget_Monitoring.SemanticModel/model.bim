@@ -248,12 +248,13 @@
             ],
             "dataType": "dateTime",
             "formatString": "Short Date",
+            "isHidden": true,
             "lineageTag": "a4555f11-3b0f-4f5e-bc2a-1d99e9fa27d4",
             "sourceColumn": "Date",
             "summarizeBy": "none"
           },
           {
-            "name": "Price",
+            "name": "Amount",
             "annotations": [
               {
                 "name": "SummarizationSetBy",
@@ -266,7 +267,7 @@
             ],
             "dataType": "double",
             "lineageTag": "f6ace9c3-c557-41f5-9616-5c71eb42568a",
-            "sourceColumn": "Price",
+            "sourceColumn": "Amount",
             "summarizeBy": "none"
           },
           {
@@ -277,7 +278,13 @@
                 "value": "Automatic"
               }
             ],
+            "changedProperties": [
+              {
+                "property": "IsHidden"
+              }
+            ],
             "dataType": "string",
+            "isHidden": true,
             "lineageTag": "ed0665ff-dd27-4684-8c77-522c812fac45",
             "sourceColumn": "Id_Bill",
             "summarizeBy": "none"
@@ -290,7 +297,13 @@
                 "value": "Automatic"
               }
             ],
+            "changedProperties": [
+              {
+                "property": "IsHidden"
+              }
+            ],
             "dataType": "string",
+            "isHidden": true,
             "lineageTag": "54251ee7-2919-4b4d-80bf-f6c01ccf7462",
             "sourceColumn": "Id_Bill_Category",
             "summarizeBy": "none"
@@ -300,9 +313,20 @@
         "measures": [
           {
             "name": "Total_Expense",
-            "expression": "SUMX(Transactions,Transactions[Price])",
+            "expression": "SUMX(Transactions,Transactions[Amount])",
             "formatString": "0.00",
             "lineageTag": "f60b372b-f18a-4b57-b253-6819d4939834"
+          },
+          {
+            "name": "Salary",
+            "expression": [
+              "",
+              "    var salary_Label = \"VIREMENT DE CGI FRANCE S.A.S. NOTPROVIDED REFERENCE : 0189212400000400\"",
+              "return",
+              "    CALCULATE( SUM(Transactions[Amount]), FILTER(Dim_Bill_Detail, Dim_Bill_Detail[Bill_Label] in {\"VIREMENT DE CGI FRANCE S.A.S. NOTPROVIDED REFERENCE : 0189212400000400\"}))"
+            ],
+            "formatString": "0.00",
+            "lineageTag": "6e62b330-2f2a-4e71-9092-af12e61fa112"
           }
         ],
         "partitions": [
@@ -316,9 +340,10 @@
                 "    #\"Promoted Headers\" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),",
                 "    #\"Removed Columns\" = Table.RemoveColumns(#\"Promoted Headers\",{\"\", \"_1\"}),",
                 "    #\"Changed Type\" = Table.TransformColumnTypes(#\"Removed Columns\",{{\"Price\", type number}, {\"Date\", type datetime}}),",
-                "    #\"Filtered Rows\" = Table.SelectRows(#\"Changed Type\", each true)",
+                "    #\"Filtered Rows\" = Table.SelectRows(#\"Changed Type\", each true),",
+                "    #\"Renamed Columns\" = Table.RenameColumns(#\"Filtered Rows\",{{\"Price\", \"Amount\"}})",
                 "in",
-                "    #\"Filtered Rows\""
+                "    #\"Renamed Columns\""
               ],
               "type": "m"
             }
@@ -346,7 +371,13 @@
                 "value": "Automatic"
               }
             ],
+            "changedProperties": [
+              {
+                "property": "IsHidden"
+              }
+            ],
             "dataType": "string",
+            "isHidden": true,
             "lineageTag": "85489267-a25b-403a-a25b-72c859d5968b",
             "sourceColumn": "Id_Bill",
             "summarizeBy": "none"
@@ -372,7 +403,13 @@
                 "value": "Automatic"
               }
             ],
+            "changedProperties": [
+              {
+                "property": "IsHidden"
+              }
+            ],
             "dataType": "string",
+            "isHidden": true,
             "lineageTag": "8d65cafb-a226-4830-b426-b04338f4eecc",
             "sourceColumn": "Id_Bill_Category",
             "summarizeBy": "none"
