@@ -1287,62 +1287,6 @@
                   }
                 ]
               },
-              "transaction.amount": {
-                "Definition": {
-                  "Binding": {
-                    "ConceptualEntity": "Transactions",
-                    "ConceptualProperty": "Amount"
-                  }
-                },
-                "State": "Generated",
-                "Terms": [
-                  {
-                    "amount": {
-                      "State": "Generated"
-                    }
-                  },
-                  {
-                    "volume": {
-                      "Source": {
-                        "Agent": "Thesaurus"
-                      },
-                      "State": "Suggested",
-                      "Type": "Noun",
-                      "Weight": 0.491
-                    }
-                  },
-                  {
-                    "expanse": {
-                      "Source": {
-                        "Agent": "Thesaurus"
-                      },
-                      "State": "Suggested",
-                      "Type": "Noun",
-                      "Weight": 0.491
-                    }
-                  },
-                  {
-                    "extent": {
-                      "Source": {
-                        "Agent": "Thesaurus"
-                      },
-                      "State": "Suggested",
-                      "Type": "Noun",
-                      "Weight": 0.491
-                    }
-                  },
-                  {
-                    "aggregate": {
-                      "Source": {
-                        "Agent": "Thesaurus"
-                      },
-                      "State": "Suggested",
-                      "Type": "Noun",
-                      "Weight": 0.476
-                    }
-                  }
-                ]
-              },
               "transaction.date": {
                 "Definition": {
                   "Binding": {
@@ -2760,23 +2704,6 @@
             "summarizeBy": "none"
           },
           {
-            "name": "Amount",
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "User"
-              },
-              {
-                "name": "PBI_FormatHint",
-                "value": "{\"isGeneralNumber\":true}"
-              }
-            ],
-            "dataType": "double",
-            "lineageTag": "f6ace9c3-c557-41f5-9616-5c71eb42568a",
-            "sourceColumn": "Amount",
-            "summarizeBy": "none"
-          },
-          {
             "name": "Id_Bill",
             "annotations": [
               {
@@ -2813,6 +2740,23 @@
             "lineageTag": "54251ee7-2919-4b4d-80bf-f6c01ccf7462",
             "sourceColumn": "Id_Bill_Category",
             "summarizeBy": "none"
+          },
+          {
+            "name": "Amount",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ],
+            "dataType": "double",
+            "lineageTag": "cc38cfd5-5a30-4d46-a06a-400be979398d",
+            "sourceColumn": "Amount",
+            "summarizeBy": "none"
           }
         ],
         "lineageTag": "184f4be5-af20-4e3e-ac6c-2c227dec9084",
@@ -2827,9 +2771,7 @@
             "name": "Salary",
             "expression": [
               "",
-              "    var salary_Label = \"VIREMENT DE CGI FRANCE S.A.S. NOTPROVIDED REFERENCE : 0189212400000400\"",
-              "return",
-              "    CALCULATE( SUM(Transactions[Amount]), FILTER(Dim_Bill_Detail, Dim_Bill_Detail[Bill_Label] in {\"VIREMENT DE CGI FRANCE S.A.S. NOTPROVIDED REFERENCE : 0189212400000400\"}))"
+              "    CALCULATE( SUM(Transactions[Amount]), FILTER(Dim_Bill_Detail, Dim_Bill_Detail[Id_Bill_Category] in {\"777\"}))"
             ],
             "formatString": "0.00",
             "lineageTag": "6e62b330-2f2a-4e71-9092-af12e61fa112"
@@ -2845,11 +2787,9 @@
                 "    Source = Csv.Document(File.Contents(\"C:\\Users\\kevin\\OneDrive\\Bureau\\Personal_Project\\Budget_Monitoring\\Data\\3_Gold\\Fact_Transaction.csv\"),[Delimiter=\";\", Columns=6, Encoding=1252, QuoteStyle=QuoteStyle.None]),",
                 "    #\"Promoted Headers\" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),",
                 "    #\"Removed Columns\" = Table.RemoveColumns(#\"Promoted Headers\",{\"\", \"_1\"}),",
-                "    #\"Changed Type\" = Table.TransformColumnTypes(#\"Removed Columns\",{{\"Price\", type number}, {\"Date\", type datetime}}),",
-                "    #\"Filtered Rows\" = Table.SelectRows(#\"Changed Type\", each true),",
-                "    #\"Renamed Columns\" = Table.RenameColumns(#\"Filtered Rows\",{{\"Price\", \"Amount\"}})",
+                "    #\"Changed Type\" = Table.TransformColumnTypes(#\"Removed Columns\",{{\"Amount\", type number} , {\"Date\", type datetime}})",
                 "in",
-                "    #\"Renamed Columns\""
+                "    #\"Changed Type\""
               ],
               "type": "m"
             }
@@ -2942,10 +2882,11 @@
             "source": {
               "expression": [
                 "let",
-                "    Source = Csv.Document(File.Contents(\"C:\\Users\\kevin\\OneDrive\\Bureau\\Personal_Project\\Budget_Monitoring\\Data\\2_Silver\\Dim_Bill_Detail.csv\"),[Delimiter=\";\", Columns=4, Encoding=1252, QuoteStyle=QuoteStyle.None]),",
-                "    #\"Promoted Headers\" = Table.PromoteHeaders(Source, [PromoteAllScalars=true])",
+                "    Source = Csv.Document(File.Contents(\"C:\\Users\\kevin\\OneDrive\\Bureau\\Personal_Project\\Budget_Monitoring\\Data\\3_Gold\\Dim_Bill_Detail.csv\"),[Delimiter=\";\", Columns=4, Encoding=1252, QuoteStyle=QuoteStyle.None]),",
+                "    #\"Promoted Headers\" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),",
+                "    #\"Filtered Rows\" = Table.SelectRows(#\"Promoted Headers\", each true)",
                 "in",
-                "    #\"Promoted Headers\""
+                "    #\"Filtered Rows\""
               ],
               "type": "m"
             }
